@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketException;
 import java.util.GregorianCalendar;
+import java.util.StringTokenizer;
 
 import org.apache.commons.net.telnet.EchoOptionHandler;
 import org.apache.commons.net.telnet.InvalidTelnetOptionException;
@@ -35,6 +36,11 @@ public class BCReader implements TelnetNotificationHandler {
 	
 	private String serverAddress = null;
 	private int serverPort = 0;
+	
+//	private StringTokenizer stringTokenizer;
+//	private String lastGoodCode;
+//	private int validCodes = 0 , badCodes = 0;
+	
 	
 	/**
 	 * Constructor
@@ -196,8 +202,13 @@ public class BCReader implements TelnetNotificationHandler {
 					inBuffLenght = in.read(inBuff);
 					if(inBuffLenght > 0) {
 						str = new String(inBuff, 0, inBuffLenght);
+						if(str.endsWith("  ")) {
+							gui.dataRecorder.analyseData(str);
+						};
+						
+						recordData(str+"\r\n");
 						gui.append(str);
-						recordData(str);
+						
 					}
 				} while (inBuffLenght >= 0);
 			} catch (Exception e) {

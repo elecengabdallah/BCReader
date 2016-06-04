@@ -28,9 +28,10 @@ import javax.swing.JTextField;
 public class BCReaderGUI extends JFrame implements ActionListener, WindowListener{
 	
 	private BCReader bcreader = null;
+	public  DataRecorder dataRecorder;
 	
-	private JLabel lPort, lAdd, lCmd;
-	private JTextField tfPort, tfAdd, tfCmd;
+	private JLabel lPort, lAdd, lCmd, lCurrentCode, lTotalGood, lTotalBad;
+	private JTextField tfPort, tfAdd, tfCmd, tfCurrentCode, tfTotalGood, tfTotalBad;
 	private JTextArea taResults;
 	private JButton btnStart, btnStop, btnSend;
 	
@@ -115,10 +116,29 @@ public class BCReaderGUI extends JFrame implements ActionListener, WindowListene
 		cmdPanel.add(lCmd);
 		cmdPanel.add(tfCmd);
 		cmdPanel.add(btnSend);
-				
+		
+//		create total reads panel
+		JPanel totalPanel = new JPanel(new GridLayout(3,2));
+		
+		lCurrentCode = new JLabel("Product:");
+		lTotalGood = new JLabel("Total:");
+		lTotalBad = new JLabel("Bad Reads:");
+		
+		tfCurrentCode = new JTextField(15);
+		tfTotalGood = new JTextField(7);
+		tfTotalBad = new JTextField(7);
+		
+		totalPanel.add(lCurrentCode);
+		totalPanel.add(tfCurrentCode);
+		totalPanel.add(lTotalGood);
+		totalPanel.add(tfTotalGood);
+		totalPanel.add(lTotalBad);
+		totalPanel.add(tfTotalBad);
+		
 //		add panels to main frame
 		this.add(connectionPanel, BorderLayout.NORTH);
 		this.add(resultsPanel, BorderLayout.CENTER);
+		this.add(totalPanel, BorderLayout.EAST);
 		this.add(cmdPanel, BorderLayout.SOUTH);
 		
 //		not resizable frame 
@@ -136,6 +156,18 @@ public class BCReaderGUI extends JFrame implements ActionListener, WindowListene
 	void append(String string) {
 		
 		taResults.append(string + "\n");
+	}
+	
+	/***
+	 * update total reads in total panel
+	 * @param code
+	 * @param totalValid
+	 * @param totalBad
+	 */
+	void updateTotalPanel(String code, int totalValid, int totalBad) {
+		tfCurrentCode.setText(code);
+		tfTotalGood.setText(String.valueOf(totalValid));
+		tfTotalBad.setText(String.valueOf(totalBad));
 	}
 	
 	/***
@@ -174,6 +206,7 @@ public class BCReaderGUI extends JFrame implements ActionListener, WindowListene
 			
 			append("Start communication...");
 			
+			dataRecorder = new DataRecorder("root", "root", this);
 			bcreader = new BCReader(tempAdd, tempPortInt, this);
 			
 //			starts the BCReader object and check the start status

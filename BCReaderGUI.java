@@ -217,6 +217,7 @@ public class BCReaderGUI extends JFrame implements ActionListener, WindowListene
 				tfPort.setEditable(false);
 				btnStop.setEnabled(true);
 				tfCmd.setEditable(true);
+				tfCmd.requestFocus();
 				btnSend.setEnabled(true);
 			} else {
 				append("Failed to communicate!!!");

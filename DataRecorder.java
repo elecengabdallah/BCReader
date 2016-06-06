@@ -97,7 +97,8 @@ public class DataRecorder {
 			
 			String firstToken = st.nextToken();
 			
-			if(lastGoodCode.equals(null) && currentCode.equals(null)) {
+			
+			if(lastGoodCode == null && currentCode == null) {
 				currentCode = firstToken;
 				lastGoodCode = currentCode;
 				goodCode++;
@@ -149,13 +150,15 @@ public class DataRecorder {
 		
 		try {
 			rs = stm.executeQuery("SELECT productCode FROM data1 WHERE productCode = " + code);
-			if(rs.first()) {
-				stm.execute("UPDATE DATA1 SET totalValid = " + String.valueOf(total) + "WHERE productCode = " + code);
+			boolean state = rs.first();
+			if(state) {
+				stm.execute("UPDATE DATA1 SET totalValid = totalValid + " + 1 + " WHERE productCode = " + code);
 			}
 			else 
-				stm.execute("INSERT INTO data1 (productCode, totalValid) VALUES (" + code + " ," + String.valueOf(total) + ")" );
+				stm.execute("INSERT INTO data1 (productCode, totalValid) VALUES (" + code + " ," + total + ")" );
 		} catch (Exception e) {
 			gui.append("Can't write to database!!!");
+			e.printStackTrace();
 		}
 		
 	}

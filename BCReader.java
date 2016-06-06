@@ -184,6 +184,7 @@ public class BCReader implements TelnetNotificationHandler {
 			gui.append("Communication disconnected.");
 		} catch (Exception e) {
 			gui.append("Error disconnecting communication!!!");
+			e.printStackTrace();
 		}
 		
 	}
@@ -193,7 +194,7 @@ public class BCReader implements TelnetNotificationHandler {
 
 		public void run() {
 			
-			byte[] inBuff = new byte[1024];
+			byte[] inBuff = new byte[2048];
 			int inBuffLenght = 0;
 			String str = null;
 			
@@ -206,6 +207,7 @@ public class BCReader implements TelnetNotificationHandler {
 							gui.dataRecorder.analyseData(str);
 						};
 						
+						
 						recordData(str+"\r\n");
 						gui.append(str);
 						
@@ -213,6 +215,7 @@ public class BCReader implements TelnetNotificationHandler {
 				} while (inBuffLenght >= 0);
 			} catch (Exception e) {
 				gui.append("Error while reading from Barcode Reader: " + e.getMessage());
+				e.printStackTrace();
 			}
 			
 			try {
